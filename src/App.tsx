@@ -1,10 +1,22 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [solution] = useState("stars");
   const [guesses, setGuesses] = useState(Array(6).fill(null));
-  const [currentGuess, setCurrentGuess] = useState("stars");
+  const [currentGuess, setCurrentGuess] = useState("");
+
+  useEffect(() => {
+    function handleType(event: KeyboardEvent) {
+      setCurrentGuess((prev) => {
+        return prev + event.key;
+      });
+    }
+
+    window.addEventListener("keydown", handleType);
+
+    return () => window.removeEventListener("keydown", handleType);
+  });
 
   return (
     <>
@@ -12,10 +24,18 @@ function App() {
         <h1 className="font-serif text-center text-4xl font-bold text-lime-800">
           Wordle
         </h1>
+        {currentGuess}
         {/* board */}
         <div className="mt-16 flex flex-col gap-1">
           {guesses.map((guess, index) => {
-            return <Line key={index} guess={guess ?? ""} />;
+            const isCurrentGuess =
+              index === guesses.findIndex((val) => val == null);
+            return (
+              <Line
+                key={index}
+                guess={isCurrentGuess ? currentGuess : guess ?? ""}
+              />
+            );
           })}
         </div>
       </main>
