@@ -23,7 +23,7 @@ function App() {
         setGuesses(newGuesses);
         setCurrentGuess("");
 
-        const isCorrect = solution === currentGuess;
+        const isCorrect = solution.toLowerCase() === currentGuess.toLowerCase();
         if (isCorrect) {
           setIsGameOver(true);
         }
@@ -85,9 +85,9 @@ function Line({
     const char = guess[i];
 
     if (isFinal) {
-      if (char === solution[i]) {
+      if (char.toLowerCase() === solution[i].toLowerCase()) {
         styling += "correct";
-      } else if (solution.includes(char)) {
+      } else if (solution.toLowerCase().includes(char.toLowerCase())) {
         styling += "wrong";
       } else {
         styling += "missing";
