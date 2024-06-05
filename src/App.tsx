@@ -13,6 +13,8 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log(currentGuess);
+
     function handleType(event: KeyboardEvent) {
       if (event.key === "Backspace") {
         setCurrentGuess((prev) => prev.slice(0, -1));
@@ -29,7 +31,7 @@ function App() {
         setGuesses(newGuesses);
         setCurrentGuess("");
 
-        const isCorrect = solution.toLowerCase() === currentGuess.toLowerCase();
+        const isCorrect = solution === currentGuess;
         if (isCorrect) {
           setIsGameOver(true);
         }
@@ -40,7 +42,7 @@ function App() {
         return;
       }
       setCurrentGuess((prev) => {
-        return prev + event.key;
+        return prev + event.key.toLowerCase();
       });
     }
 
@@ -91,9 +93,9 @@ function Line({
     const char = guess[i];
 
     if (isFinal) {
-      if (char.toLowerCase() === solution[i].toLowerCase()) {
+      if (char === solution[i]) {
         styling += "correct";
-      } else if (solution.toLowerCase().includes(char.toLowerCase())) {
+      } else if (solution.includes(char)) {
         styling += "wrong";
       } else {
         styling += "missing";
