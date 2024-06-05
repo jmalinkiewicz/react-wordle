@@ -1,11 +1,16 @@
 import "./App.css";
 import { useState, useEffect } from "react";
+import { dictionary } from "./words";
 
 function App() {
-  const [solution] = useState("stars");
+  const [solution, setSolution] = useState("");
   const [guesses, setGuesses] = useState(Array(6).fill(null));
   const [currentGuess, setCurrentGuess] = useState("");
   const [isGameOver, setIsGameOver] = useState(false);
+
+  useEffect(() => {
+    setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
+  }, []);
 
   useEffect(() => {
     function handleType(event: KeyboardEvent) {
@@ -15,7 +20,8 @@ function App() {
       }
 
       if (event.key === "Enter") {
-        if (currentGuess.length !== 5) {
+        if (currentGuess.length !== 5 || !dictionary.includes(currentGuess)) {
+          console.log("Invalid guess");
           return;
         }
         const newGuesses = [...guesses];
