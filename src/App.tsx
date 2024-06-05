@@ -92,6 +92,8 @@ function Line({
       } else {
         styling += "missing";
       }
+    } else if (char) {
+      styling += "border-black";
     }
     tiles.push(<div className={styling}>{char}</div>);
   }
