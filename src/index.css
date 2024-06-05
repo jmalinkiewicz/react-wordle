@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .tile {
+    @apply h-14 w-14 border-[2px] border-gray-400 uppercase text-2xl flex items-center justify-center font-bold;
+  }
+  .correct {
+    @apply bg-[#6aaa64] border-[#6aaa64] text-white;
+  }
+  .wrong {
+    @apply bg-yellow-500 border-yellow-500 text-white;
+  }
+  .missing {
+    @apply bg-gray-400 text-white;
+  }
+}
