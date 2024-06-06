@@ -46,6 +46,10 @@ function App() {
         return prev + event.key.toLowerCase();
       });
     }
+    if (isGameOver || guesses.every((val) => val != null)) {
+      setIsGameOver(true);
+      return;
+    }
 
     window.addEventListener("keydown", handleType);
 
@@ -73,6 +77,35 @@ function App() {
             );
           })}
         </div>
+        {isGameOver && (
+          <motion.div
+            className="flex flex-col items-center gap-4 mt-12"
+            animate={{
+              scale: [0, 1],
+            }}
+          >
+            <h2 className="text-center text-2xl">
+              The word was{" "}
+              <span className="text-lime-800 font-bold">{solution}</span>
+            </h2>
+            <motion.button
+              whileHover={{
+                textDecoration: "underline",
+              }}
+              onClick={() => {
+                setSolution(
+                  dictionary[Math.floor(Math.random() * dictionary.length)]
+                );
+                setGuesses(Array(6).fill(null));
+                setCurrentGuess("");
+                setIsGameOver(false);
+              }}
+              className="font-bold text-lime-800"
+            >
+              play again
+            </motion.button>
+          </motion.div>
+        )}
       </main>
     </>
   );
