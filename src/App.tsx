@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { dictionary } from "./words";
+import { motion } from "framer-motion";
 
 function App() {
   const [solution, setSolution] = useState("");
@@ -103,10 +104,28 @@ function Line({
     } else if (char) {
       styling += "border-black";
     }
-    tiles.push(<div className={styling}>{char}</div>);
+    tiles.push(
+      <motion.div
+        animate={{
+          scale: char ? [1.1, 1] : 1,
+        }}
+        className={styling}
+      >
+        {char}
+      </motion.div>
+    );
   }
 
-  return <div className="flex justify-center gap-1">{tiles}</div>;
+  return (
+    <motion.div
+      animate={{
+        scale: isFinal ? [0.5, 1] : 1,
+      }}
+      className="flex justify-center gap-1"
+    >
+      {tiles}
+    </motion.div>
+  );
 }
 
 export default App;
