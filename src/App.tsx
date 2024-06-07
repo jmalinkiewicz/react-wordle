@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { dictionary } from "./words";
+import { accepctedWords, dictionary } from "./words";
 import { motion } from "framer-motion";
 
 function App() {
@@ -23,7 +23,10 @@ function App() {
       }
 
       if (event.key === "Enter") {
-        if (currentGuess.length !== 5 || !dictionary.includes(currentGuess)) {
+        if (
+          currentGuess.length !== 5 ||
+          !accepctedWords.includes(currentGuess)
+        ) {
           console.log("Invalid guess");
           return;
         }
