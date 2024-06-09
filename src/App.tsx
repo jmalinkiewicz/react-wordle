@@ -15,6 +15,10 @@ function App() {
   const [gamesPlayed, saveGamesPlayed] = useLocalStorage("gamesPlayed", 0);
   const [gamesWon, saveGamesWon] = useLocalStorage("gamesWon", 0);
   const [guessesMade, saveGuessesMade] = useLocalStorage("guessesMade", 0);
+  const [unqiueGuesses, saveUniqueGuesses] = useLocalStorage<String[]>(
+    "uniqueGueses",
+    []
+  );
   const [showStats, setShowStats] = useState(false);
 
   useEffect(() => {
@@ -43,6 +47,9 @@ function App() {
         newGuesses[guesses.findIndex((val) => val == null)] = currentGuess;
         setGuesses(newGuesses);
         saveGuessesMade(guessesMade + 1);
+        if (!unqiueGuesses.includes(currentGuess)) {
+          saveUniqueGuesses([...unqiueGuesses, currentGuess]);
+        }
         setCurrentGuess("");
 
         const isCorrect = solution === currentGuess;
@@ -114,6 +121,10 @@ function App() {
                     <tr className="odd:bg-green-200">
                       <td>Total Guesses</td>
                       <td>{guessesMade}</td>
+                    </tr>
+                    <tr className="odd:bg-green-200">
+                      <td>Unique Guesses</td>
+                      <td>{unqiueGuesses.length}</td>
                     </tr>
                   </tbody>
                 </table>
