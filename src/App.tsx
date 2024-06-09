@@ -155,6 +155,7 @@ function App() {
                 setGuesses(Array(6).fill(null));
                 setCurrentGuess("");
                 setIsGameOver(false);
+                saveGamesPlayed(gamesPlayed + 1);
               }}
               className="font-bold text-lime-800"
             >
