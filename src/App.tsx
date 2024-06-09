@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { accepctedWords, dictionary } from "./words";
 import { motion } from "framer-motion";
+import { evaluateGuess } from "./helpers";
 
 function App() {
   const [solution, setSolution] = useState("");
@@ -125,18 +126,15 @@ function Line({
 }) {
   let tiles = [];
 
+  const evaluation = isFinal ? evaluateGuess(solution, guess) : [];
+
   for (let i = 0; i < 5; i++) {
     let styling = "tile ";
     const char = guess[i];
 
     if (isFinal) {
-      if (char === solution[i]) {
-        styling += "correct";
-      } else if (solution.includes(char)) {
-        styling += "wrong";
-      } else {
-        styling += "missing";
-      }
+      // Use the evaluation result to set the styling
+      styling += evaluation[i];
     } else if (char) {
       styling += "border-black";
     }
