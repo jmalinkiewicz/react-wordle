@@ -1,17 +1,25 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { accepctedWords, dictionary } from "./words";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { evaluateGuess } from "./helpers";
+import ChartBarsFilledIcon from "./components/icons/chartBarsFilled";
+import ChartBarsOutlineIcon from "./components/icons/chartBarsOutline";
 
 function App() {
   const [solution, setSolution] = useState("");
   const [guesses, setGuesses] = useState(Array(6).fill(null));
   const [currentGuess, setCurrentGuess] = useState("");
   const [isGameOver, setIsGameOver] = useState(false);
+  const [gamesPlayed, saveGamesPlayed] = useLocalStorage("gamesPlayed", 0);
+  const [gamesWon, saveGamesWon] = useLocalStorage("gamesWon", 0);
+  const [guessesMade, saveGuessesMade] = useLocalStorage("guessesMade", 0);
+  const [showStats, setShowStats] = useState(false);
 
   useEffect(() => {
     setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
+    saveGamesPlayed(gamesPlayed + 1);
   }, []);
 
   useEffect(() => {
@@ -34,10 +42,12 @@ function App() {
         const newGuesses = [...guesses];
         newGuesses[guesses.findIndex((val) => val == null)] = currentGuess;
         setGuesses(newGuesses);
+        saveGuessesMade(guessesMade + 1);
         setCurrentGuess("");
 
         const isCorrect = solution === currentGuess;
         if (isCorrect) {
+          saveGamesWon(gamesWon + 1);
           setIsGameOver(true);
         }
       }
@@ -62,12 +72,54 @@ function App() {
 
   return (
     <>
+      <button
+        className="absolute top-4 right-4 p-2 bg-lime-800 text-white rounded-full"
+        onClick={() => {
+          setShowStats((prev) => !prev);
+        }}
+      >
+        {showStats ? <ChartBarsFilledIcon /> : <ChartBarsOutlineIcon />}
+      </button>
       <main className="max-w-screen-xl m-auto mt-24">
         <h1 className="font-serif text-center text-4xl font-bold text-lime-800">
           Wordle
         </h1>
         {/* board */}
-        <div className="mt-16 flex flex-col gap-1">
+        <div className="mt-16 flex flex-col gap-1 relative">
+          <AnimatePresence>
+            {showStats && (
+              <motion.div
+                className="absolute inset-0 p-4 bg-lime-800 text-white rounded-lg flex flex-col "
+                initial={{
+                  scale: 0,
+                }}
+                animate={{
+                  scale: 1,
+                }}
+                exit={{
+                  scale: 0,
+                }}
+              >
+                <h2 className="text-center text-2xl font-bold">Stats</h2>
+                <table className="mt-6 table-auto w-full bg-green-100 text-black">
+                  <tbody>
+                    <tr className="odd:bg-green-200">
+                      <td>Games Played:</td>
+                      <td>{gamesPlayed}</td>
+                    </tr>
+                    <tr className="odd:bg-green-200">
+                      <td>Games Won</td>
+                      <td>{gamesWon}</td>
+                    </tr>
+                    <tr className="odd:bg-green-200">
+                      <td>Total Guesses</td>
+                      <td>{guessesMade}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </motion.div>
+            )}
+          </AnimatePresence>
           {guesses.map((guess, index) => {
             const isCurrentGuess =
               index === guesses.findIndex((val) => val == null);
