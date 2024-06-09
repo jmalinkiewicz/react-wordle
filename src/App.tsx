@@ -15,8 +15,12 @@ function App() {
   const [gamesPlayed, saveGamesPlayed] = useLocalStorage("gamesPlayed", 0);
   const [gamesWon, saveGamesWon] = useLocalStorage("gamesWon", 0);
   const [guessesMade, saveGuessesMade] = useLocalStorage("guessesMade", 0);
-  const [unqiueGuesses, saveUniqueGuesses] = useLocalStorage<String[]>(
+  const [unqiueGuesses, saveUniqueGuesses] = useLocalStorage<string[]>(
     "uniqueGueses",
+    []
+  );
+  const [firstGuessList, saveFirstGuessList] = useLocalStorage<string[]>(
+    "firstGuessList",
     []
   );
   const [showStats, setShowStats] = useState(false);
@@ -43,6 +47,10 @@ function App() {
           console.log("Invalid guess");
           return;
         }
+        if (0 === guesses.findIndex((val) => val == null)) {
+          saveFirstGuessList([...firstGuessList, currentGuess]);
+        }
+
         const newGuesses = [...guesses];
         newGuesses[guesses.findIndex((val) => val == null)] = currentGuess;
         setGuesses(newGuesses);
@@ -76,6 +84,26 @@ function App() {
 
     return () => window.removeEventListener("keydown", handleType);
   }, [currentGuess, isGameOver, guesses]);
+
+  const countMap: { [key: string]: number } = {};
+
+  firstGuessList.forEach((guess) => {
+    if (countMap[guess]) {
+      countMap[guess]++;
+    } else {
+      countMap[guess] = 1;
+    }
+  });
+
+  let mostFrequent = firstGuessList[0];
+  let maxCount = 0;
+
+  for (const item in countMap) {
+    if (countMap[item] > maxCount) {
+      mostFrequent = item;
+      maxCount = countMap[item];
+    }
+  }
 
   return (
     <>
@@ -131,6 +159,12 @@ function App() {
                     <tr className="odd:bg-lime-900">
                       <td className="py-2 pl-4">Unique Guesses:</td>
                       <td className="py-2">{unqiueGuesses.length}</td>
+                    </tr>
+                    <tr className="odd:bg-lime-900">
+                      <td className="py-2 pl-4">Favorite First Guess:</td>
+                      <td className="py-2">
+                        {mostFrequent} ({maxCount})
+                      </td>
                     </tr>
                   </tbody>
                 </table>
