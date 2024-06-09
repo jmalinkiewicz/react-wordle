@@ -96,7 +96,7 @@ function App() {
           <AnimatePresence>
             {showStats && (
               <motion.div
-                className="absolute inset-0 p-4 bg-lime-800 text-white rounded-lg flex flex-col "
+                className="absolute inset-0 p-4 bg-lime-800 text-white rounded-lg flex flex-col gap-8 "
                 initial={{
                   scale: 0,
                 }}
@@ -108,23 +108,29 @@ function App() {
                 }}
               >
                 <h2 className="text-center text-2xl font-bold">Stats</h2>
-                <table className="mt-6 table-auto w-full bg-green-100 text-black">
+                <table className="border-collapse table-auto w-full text-sm bg-lime-950 text-white rounded">
+                  <thead>
+                    <tr>
+                      <td className="py-2 pl-4 font-bold">Statistic</td>
+                      <td className="py-2 font-bold">Value</td>
+                    </tr>
+                  </thead>
                   <tbody>
-                    <tr className="odd:bg-green-200">
-                      <td>Games Played:</td>
-                      <td>{gamesPlayed}</td>
+                    <tr className="odd:bg-lime-900">
+                      <td className="py-2 pl-4">Games Played:</td>
+                      <td className="py-2">{gamesPlayed}</td>
                     </tr>
-                    <tr className="odd:bg-green-200">
-                      <td>Games Won</td>
-                      <td>{gamesWon}</td>
+                    <tr className="odd:bg-lime-900">
+                      <td className="py-2 pl-4">Games Won:</td>
+                      <td className="py-2">{gamesWon}</td>
                     </tr>
-                    <tr className="odd:bg-green-200">
-                      <td>Total Guesses</td>
-                      <td>{guessesMade}</td>
+                    <tr className="odd:bg-lime-900">
+                      <td className="py-2 pl-4">Total Guesses:</td>
+                      <td className="py-2">{guessesMade}</td>
                     </tr>
-                    <tr className="odd:bg-green-200">
-                      <td>Unique Guesses</td>
-                      <td>{unqiueGuesses.length}</td>
+                    <tr className="odd:bg-lime-900">
+                      <td className="py-2 pl-4">Unique Guesses:</td>
+                      <td className="py-2">{unqiueGuesses.length}</td>
                     </tr>
                   </tbody>
                 </table>
