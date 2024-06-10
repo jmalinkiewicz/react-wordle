@@ -27,7 +27,6 @@ function App() {
 
   useEffect(() => {
     setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
-    saveGamesPlayed(gamesPlayed + 1);
   }, []);
 
   useEffect(() => {
@@ -49,6 +48,7 @@ function App() {
         }
         if (0 === guesses.findIndex((val) => val == null)) {
           saveFirstGuessList([...firstGuessList, currentGuess]);
+          saveGamesPlayed(gamesPlayed + 1);
         }
 
         const newGuesses = [...guesses];
