@@ -1,11 +1,12 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { accepctedWords, dictionary } from "./words";
+import { accepctedWords, dictionary, polishDictionary } from "./words";
 import { motion } from "framer-motion";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import Line from "./components/line/line";
 import Nav from "./components/nav/nav";
 import Stats from "./components/panels/stats";
+import Settings from "./components/panels/settings";
 
 function App() {
   const [solution, setSolution] = useState("");
@@ -23,10 +24,21 @@ function App() {
     "firstGuessList",
     []
   );
+  const [languageMode, saveLanguageMode] = useLocalStorage<"en" | "pl">(
+    "languageMode",
+    "en"
+  );
   const [showStats, setShowStats] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
-    setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
+    if (languageMode === "en") {
+      setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
+    } else {
+      setSolution(
+        polishDictionary[Math.floor(Math.random() * polishDictionary.length)]
+      );
+    }
   }, []);
 
   useEffect(() => {
@@ -39,12 +51,22 @@ function App() {
       }
 
       if (event.key === "Enter") {
-        if (
-          currentGuess.length !== 5 ||
-          !accepctedWords.includes(currentGuess)
-        ) {
-          console.log("Invalid guess");
-          return;
+        if (languageMode === "en") {
+          if (
+            currentGuess.length !== 5 ||
+            !accepctedWords.includes(currentGuess)
+          ) {
+            console.log("Invalid guess");
+            return;
+          }
+        } else if (languageMode === "pl") {
+          if (
+            currentGuess.length !== 5 ||
+            !polishDictionary.includes(currentGuess)
+          ) {
+            console.log("Invalid guess");
+            return;
+          }
         }
         if (0 === guesses.findIndex((val) => val == null)) {
           saveFirstGuessList([...firstGuessList, currentGuess]);
@@ -67,7 +89,12 @@ function App() {
         }
       }
 
-      const isLetter = event.key.length === 1 && event.key.match(/[a-z]/i);
+      let isLetter;
+      if (languageMode === "en") {
+        isLetter = event.key.length === 1 && event.key.match(/[a-z]/i);
+      } else {
+        isLetter = event.key.length === 1 && event.key.match(/[a-zżźćńółęąś]/i);
+      }
       if (currentGuess.length === 5 || isGameOver || !isLetter) {
         return;
       }
@@ -105,9 +132,27 @@ function App() {
     }
   }
 
+  function resetGameState() {
+    if (languageMode === "en") {
+      setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
+    } else {
+      setSolution(
+        polishDictionary[Math.floor(Math.random() * polishDictionary.length)]
+      );
+    }
+    setGuesses(Array(6).fill(null));
+    setCurrentGuess("");
+    setIsGameOver(false);
+  }
+
   return (
     <>
-      <Nav showStats={showStats} setShowStats={setShowStats} />
+      <Nav
+        showStats={showStats}
+        setShowStats={setShowStats}
+        showSettings={showSettings}
+        setShowSettings={setShowSettings}
+      />
       <main className="max-w-screen-xl m-auto mt-24">
         <h1 className="font-serif text-center text-4xl font-bold text-lime-800">
           Wordle
@@ -122,6 +167,12 @@ function App() {
             mostFrequent={mostFrequent}
             maxCount={maxCount}
             showStats={showStats}
+          />
+          <Settings
+            showSettings={showSettings}
+            languageMode={languageMode}
+            saveLanguageMode={saveLanguageMode}
+            resetGameState={resetGameState}
           />
           {guesses.map((guess, index) => {
             const isCurrentGuess =
@@ -152,12 +203,7 @@ function App() {
                 textDecoration: "underline",
               }}
               onClick={() => {
-                setSolution(
-                  dictionary[Math.floor(Math.random() * dictionary.length)]
-                );
-                setGuesses(Array(6).fill(null));
-                setCurrentGuess("");
-                setIsGameOver(false);
+                resetGameState();
               }}
               className="font-bold text-lime-800"
             >
