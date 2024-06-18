@@ -9,7 +9,7 @@ export default function Settings({
   showSettings: boolean;
   languageMode: "en" | "pl";
   saveLanguageMode: React.Dispatch<React.SetStateAction<"en" | "pl">>;
-  resetGameState: () => void;
+  resetGameState: (lang?: "en" | "pl") => void;
 }) {
   return (
     <AnimatePresence>
@@ -33,7 +33,7 @@ export default function Settings({
               <motion.button
                 onClick={() => {
                   saveLanguageMode("pl");
-                  resetGameState();
+                  resetGameState("pl");
                 }}
                 whileTap={{
                   scale: 0.95,
@@ -49,7 +49,7 @@ export default function Settings({
               <motion.button
                 onClick={() => {
                   saveLanguageMode("en");
-                  resetGameState();
+                  resetGameState("en");
                 }}
                 whileTap={{
                   scale: 0.95,

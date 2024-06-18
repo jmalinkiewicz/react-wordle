@@ -132,10 +132,10 @@ function App() {
     }
   }
 
-  function resetGameState() {
-    if (languageMode === "en") {
+  function resetGameState(lang?: "en" | "pl") {
+    if (lang === "en") {
       setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
-    } else {
+    } else if (lang === "pl") {
       setSolution(
         polishDictionary[Math.floor(Math.random() * polishDictionary.length)]
       );
