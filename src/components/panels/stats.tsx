@@ -21,7 +21,7 @@ export default function Stats({
     <AnimatePresence>
       {showStats && (
         <motion.div
-          className="absolute inset-0 p-4 bg-lime-800 text-white rounded-lg flex flex-col gap-8 "
+          className="absolute z-50 inset-0 p-4 bg-lime-800 text-white rounded-lg flex flex-col gap-8 "
           initial={{
             scale: 0,
           }}
