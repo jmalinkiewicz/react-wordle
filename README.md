@@ -31,4 +31,4 @@ Clone of a popular game called Wordle. Made with React, TailwindCSS and Framer M
    ```bash
    npm run dev
    ```
-5. The app should be accessible at http://localhost:5173
+5. The app should be accessible at http://localhost:5173/react-wordle/
