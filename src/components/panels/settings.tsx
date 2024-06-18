@@ -1,16 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
 
+type Props = {
+  showSettings: boolean;
+  languageMode: "en" | "pl";
+  saveLanguageMode: React.Dispatch<React.SetStateAction<"en" | "pl">>;
+  resetGameState: (lang?: "en" | "pl") => void;
+};
+
 export default function Settings({
   showSettings,
   languageMode,
   saveLanguageMode,
   resetGameState,
-}: {
-  showSettings: boolean;
-  languageMode: "en" | "pl";
-  saveLanguageMode: React.Dispatch<React.SetStateAction<"en" | "pl">>;
-  resetGameState: (lang?: "en" | "pl") => void;
-}) {
+}: Props) {
   return (
     <AnimatePresence>
       {showSettings && (

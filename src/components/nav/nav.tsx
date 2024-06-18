@@ -4,17 +4,19 @@ import ChartBarsOutlineIcon from "../icons/chartBarsOutline";
 import CogFilledIcon from "../icons/cogFilled";
 import CogOutlineIcon from "../icons/cogOutline";
 
+type Props = {
+  showStats: boolean;
+  setShowStats: React.Dispatch<React.SetStateAction<boolean>>;
+  showSettings: boolean;
+  setShowSettings: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 export default function Nav({
   showStats,
   setShowStats,
   showSettings,
   setShowSettings,
-}: {
-  showStats: boolean;
-  setShowStats: React.Dispatch<React.SetStateAction<boolean>>;
-  showSettings: boolean;
-  setShowSettings: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}: Props) {
   return (
     <div className="absolute top-4 right-4 flex gap-3">
       <motion.button

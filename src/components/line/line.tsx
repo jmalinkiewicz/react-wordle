@@ -1,15 +1,13 @@
 import { motion } from "framer-motion";
 import { evaluateGuess } from "../../helpers";
 
-export default function Line({
-  guess,
-  isFinal,
-  solution,
-}: {
+type Props = {
   guess: string;
   isFinal: boolean;
   solution: string;
-}) {
+};
+
+export default function Line({ guess, isFinal, solution }: Props) {
   let tiles = [];
 
   const evaluation = isFinal ? evaluateGuess(solution, guess) : [];

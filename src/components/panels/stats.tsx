@@ -1,5 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
 
+type Props = {
+  gamesPlayed: number;
+  gamesWon: number;
+  guessesMade: number;
+  uniqueGuesses: string[];
+  mostFrequent: string;
+  maxCount: number;
+  showStats: boolean;
+};
+
 export default function Stats({
   gamesPlayed,
   gamesWon,
@@ -8,15 +18,7 @@ export default function Stats({
   mostFrequent,
   maxCount,
   showStats,
-}: {
-  gamesPlayed: number;
-  gamesWon: number;
-  guessesMade: number;
-  uniqueGuesses: string[];
-  mostFrequent: string;
-  maxCount: number;
-  showStats: boolean;
-}) {
+}: Props) {
   return (
     <AnimatePresence>
       {showStats && (
