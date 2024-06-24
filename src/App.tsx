@@ -203,7 +203,7 @@ function App() {
                 textDecoration: "underline",
               }}
               onClick={() => {
-                resetGameState();
+                resetGameState(languageMode);
               }}
               className="font-bold text-lime-800"
             >
