@@ -2,51 +2,56 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { accepctedWords, dictionary, polishDictionary } from "./words";
 import { motion } from "framer-motion";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import Line from "./components/line/line";
 import Nav from "./components/nav/nav";
 import Stats from "./components/panels/stats";
 import Settings from "./components/panels/settings";
+import { useWordleStore } from "./state/wordle";
 
 function App() {
-  const [solution, setSolution] = useState("");
-  const [guesses, setGuesses] = useState(Array(6).fill(null));
-  const [currentGuess, setCurrentGuess] = useState("");
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [gamesPlayed, saveGamesPlayed] = useLocalStorage("gamesPlayed", 0);
-  const [gamesWon, saveGamesWon] = useLocalStorage("gamesWon", 0);
-  const [guessesMade, saveGuessesMade] = useLocalStorage("guessesMade", 0);
-  const [uniqueGuesses, saveUniqueGuesses] = useLocalStorage<string[]>(
-    "uniqueGueses",
-    []
-  );
-  const [firstGuessList, saveFirstGuessList] = useLocalStorage<string[]>(
-    "firstGuessList",
-    []
-  );
-  const [languageMode, saveLanguageMode] = useLocalStorage<"en" | "pl">(
-    "languageMode",
-    "en"
-  );
+  const {
+    setCurrentGuess,
+    setGamesPlayed,
+    setGamesWon,
+    setGuessesMade,
+    setUniqueGuesses,
+    setFirstGuessList,
+    setIsGameOver,
+    setSolution,
+    setGuesses,
+    resetGameState,
+    currentGuess,
+    firstGuessList,
+    gamesPlayed,
+    gamesWon,
+    guessesMade,
+    uniqueGuesses,
+    isGameOver,
+    languageMode,
+    solution,
+    guesses,
+  } = useWordleStore();
+
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
-    if (languageMode === "en") {
-      setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
-    } else {
-      setSolution(
-        polishDictionary[Math.floor(Math.random() * polishDictionary.length)]
-      );
+    if (!solution) {
+      if (languageMode === "en") {
+        setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
+      } else {
+        setSolution(
+          polishDictionary[Math.floor(Math.random() * polishDictionary.length)]
+        );
+      }
     }
   }, []);
 
   useEffect(() => {
-    console.log(currentGuess);
-
     function handleType(event: KeyboardEvent) {
       if (event.key === "Backspace") {
-        setCurrentGuess((prev) => prev.slice(0, -1));
+        const newCurrentGuess = currentGuess.slice(0, -1);
+        setCurrentGuess(newCurrentGuess);
         return;
       }
 
@@ -69,22 +74,22 @@ function App() {
           }
         }
         if (0 === guesses.findIndex((val) => val == null)) {
-          saveFirstGuessList([...firstGuessList, currentGuess]);
-          saveGamesPlayed(gamesPlayed + 1);
+          setFirstGuessList([...firstGuessList, currentGuess]);
+          setGamesPlayed(gamesPlayed + 1);
         }
 
         const newGuesses = [...guesses];
         newGuesses[guesses.findIndex((val) => val == null)] = currentGuess;
         setGuesses(newGuesses);
-        saveGuessesMade(guessesMade + 1);
+        setGuessesMade(guessesMade + 1);
         if (!uniqueGuesses.includes(currentGuess)) {
-          saveUniqueGuesses([...uniqueGuesses, currentGuess]);
+          setUniqueGuesses([...uniqueGuesses, currentGuess]);
         }
         setCurrentGuess("");
 
         const isCorrect = solution === currentGuess;
         if (isCorrect) {
-          saveGamesWon(gamesWon + 1);
+          setGamesWon(gamesWon + 1);
           setIsGameOver(true);
         }
       }
@@ -98,9 +103,8 @@ function App() {
       if (currentGuess.length === 5 || isGameOver || !isLetter) {
         return;
       }
-      setCurrentGuess((prev) => {
-        return prev + event.key.toLowerCase();
-      });
+      const newCurrentGuess = currentGuess + event.key.toLowerCase();
+      setCurrentGuess(newCurrentGuess);
     }
     if (isGameOver || guesses.every((val) => val != null)) {
       setIsGameOver(true);
@@ -122,29 +126,6 @@ function App() {
     }
   });
 
-  let mostFrequent = firstGuessList[0];
-  let maxCount = 0;
-
-  for (const item in countMap) {
-    if (countMap[item] > maxCount) {
-      mostFrequent = item;
-      maxCount = countMap[item];
-    }
-  }
-
-  function resetGameState(lang?: "en" | "pl") {
-    if (lang === "en") {
-      setSolution(dictionary[Math.floor(Math.random() * dictionary.length)]);
-    } else if (lang === "pl") {
-      setSolution(
-        polishDictionary[Math.floor(Math.random() * polishDictionary.length)]
-      );
-    }
-    setGuesses(Array(6).fill(null));
-    setCurrentGuess("");
-    setIsGameOver(false);
-  }
-
   return (
     <>
       <Nav
@@ -159,19 +140,9 @@ function App() {
         </h1>
         {/* board */}
         <div className="mt-16 flex flex-col gap-1 relative">
-          <Stats
-            gamesPlayed={gamesPlayed}
-            gamesWon={gamesWon}
-            guessesMade={guessesMade}
-            uniqueGuesses={uniqueGuesses}
-            mostFrequent={mostFrequent}
-            maxCount={maxCount}
-            showStats={showStats}
-          />
+          <Stats showStats={showStats} />
           <Settings
             showSettings={showSettings}
-            languageMode={languageMode}
-            saveLanguageMode={saveLanguageMode}
             resetGameState={resetGameState}
           />
           {guesses.map((guess, index) => {
@@ -203,7 +174,7 @@ function App() {
                 textDecoration: "underline",
               }}
               onClick={() => {
-                resetGameState(languageMode);
+                resetGameState();
               }}
               className="font-bold text-lime-800"
             >

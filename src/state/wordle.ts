@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { dictionary, polishDictionary } from "../words";
 
 interface WordleState {
   solution: string;
@@ -25,11 +26,12 @@ interface WordleActions {
   setUniqueGuesses: (uniqueGuesses: string[]) => void;
   setFirstGuessList: (firstGuessList: string[]) => void;
   setLanguageMode: (languageMode: "en" | "pl") => void;
+  resetGameState: () => void;
 }
 
 export const useWordleStore = create<WordleState & WordleActions>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       // state
       solution: "",
       guesses: Array(6).fill(null),
@@ -52,6 +54,24 @@ export const useWordleStore = create<WordleState & WordleActions>()(
       setUniqueGuesses: (uniqueGuesses) => set({ uniqueGuesses }),
       setFirstGuessList: (firstGuessList) => set({ firstGuessList }),
       setLanguageMode: (languageMode) => set({ languageMode }),
+      resetGameState: () => {
+        const newSolution =
+          get().languageMode === "en"
+            ? dictionary[Math.floor(Math.random() * dictionary.length)]
+            : polishDictionary[
+                Math.floor(Math.random() * polishDictionary.length)
+              ];
+
+        set({
+          solution: newSolution,
+          guesses: Array(6).fill(null),
+          currentGuess: "",
+          isGameOver: false,
+          guessesMade: 0,
+          uniqueGuesses: [],
+          firstGuessList: [],
+        });
+      },
     }),
     {
       name: "wordle-storage",

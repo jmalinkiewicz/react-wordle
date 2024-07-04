@@ -1,24 +1,30 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useWordleStore } from "../../state/wordle";
 
-type Props = {
-  gamesPlayed: number;
-  gamesWon: number;
-  guessesMade: number;
-  uniqueGuesses: string[];
-  mostFrequent: string;
-  maxCount: number;
-  showStats: boolean;
-};
+export default function Stats({ showStats }: { showStats: boolean }) {
+  const { gamesPlayed, gamesWon, guessesMade, uniqueGuesses, firstGuessList } =
+    useWordleStore();
 
-export default function Stats({
-  gamesPlayed,
-  gamesWon,
-  guessesMade,
-  uniqueGuesses,
-  mostFrequent,
-  maxCount,
-  showStats,
-}: Props) {
+  const countMap: { [key: string]: number } = {};
+
+  firstGuessList.forEach((guess) => {
+    if (countMap[guess]) {
+      countMap[guess]++;
+    } else {
+      countMap[guess] = 1;
+    }
+  });
+
+  let mostFrequent = firstGuessList[0];
+  let maxCount = 0;
+
+  for (const item in countMap) {
+    if (countMap[item] > maxCount) {
+      mostFrequent = item;
+      maxCount = countMap[item];
+    }
+  }
+
   return (
     <AnimatePresence>
       {showStats && (

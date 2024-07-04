@@ -1,18 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { useWordleStore } from "../../state/wordle";
 
 type Props = {
   showSettings: boolean;
-  languageMode: "en" | "pl";
-  saveLanguageMode: React.Dispatch<React.SetStateAction<"en" | "pl">>;
   resetGameState: (lang?: "en" | "pl") => void;
 };
 
 export default function Settings({
   showSettings,
-  languageMode,
-  saveLanguageMode,
+
   resetGameState,
 }: Props) {
+  const { setLanguageMode, languageMode } = useWordleStore();
+
   return (
     <AnimatePresence>
       {showSettings && (
@@ -34,7 +34,7 @@ export default function Settings({
             <div className="flex w-full gap-1">
               <motion.button
                 onClick={() => {
-                  saveLanguageMode("pl");
+                  setLanguageMode("pl");
                   resetGameState("pl");
                 }}
                 whileTap={{
@@ -50,7 +50,7 @@ export default function Settings({
               </motion.button>
               <motion.button
                 onClick={() => {
-                  saveLanguageMode("en");
+                  setLanguageMode("en");
                   resetGameState("en");
                 }}
                 whileTap={{
