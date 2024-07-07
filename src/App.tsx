@@ -8,6 +8,7 @@ import Stats from "./components/panels/stats";
 import Settings from "./components/panels/settings";
 import { useWordleStore } from "./state/wordle";
 import Keyboard from "./components/keyboard/keyboard";
+import { useLettersStore } from "./state/letters";
 
 function App() {
   const {
@@ -32,6 +33,7 @@ function App() {
     solution,
     guesses,
   } = useWordleStore();
+  const { resetLetters } = useLettersStore();
 
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -135,7 +137,7 @@ function App() {
         showSettings={showSettings}
         setShowSettings={setShowSettings}
       />
-      <main className="max-w-screen-xl m-auto pt-24 flex flex-col justify-between h-full">
+      <main className="max-w-screen-xl m-auto pt-24 flex flex-col justify-between items-center h-full">
         <div>
           <h1 className="font-serif text-center text-4xl font-bold text-lime-800">
             Wordle
@@ -177,6 +179,7 @@ function App() {
                 }}
                 onClick={() => {
                   resetGameState();
+                  resetLetters();
                 }}
                 className="font-bold text-lime-800"
               >

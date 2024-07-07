@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useWordleStore } from "../../state/wordle";
+import { useLettersStore } from "../../state/letters";
 
 type Props = {
   showSettings: boolean;
@@ -12,6 +13,7 @@ export default function Settings({
   resetGameState,
 }: Props) {
   const { setLanguageMode, languageMode } = useWordleStore();
+  const { resetLetters } = useLettersStore();
 
   return (
     <AnimatePresence>
@@ -36,6 +38,7 @@ export default function Settings({
                 onClick={() => {
                   setLanguageMode("pl");
                   resetGameState("pl");
+                  resetLetters();
                 }}
                 whileTap={{
                   scale: 0.95,
@@ -52,6 +55,7 @@ export default function Settings({
                 onClick={() => {
                   setLanguageMode("en");
                   resetGameState("en");
+                  resetLetters();
                 }}
                 whileTap={{
                   scale: 0.95,

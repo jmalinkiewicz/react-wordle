@@ -11,6 +11,7 @@ interface LettersActions {
   setGrayLetters: (grayLetters: string[]) => void;
   setYellowLetters: (yellowLetters: string[]) => void;
   setGreenLetters: (greenLetters: string[]) => void;
+  resetLetters: () => void;
 }
 
 export const useLettersStore = create<LettersState & LettersActions>()(
@@ -22,6 +23,9 @@ export const useLettersStore = create<LettersState & LettersActions>()(
       setGrayLetters: (grayLetters) => set({ grayLetters }),
       setYellowLetters: (yellowLetters) => set({ yellowLetters }),
       setGreenLetters: (greenLetters) => set({ greenLetters }),
+      resetLetters: () => {
+        set({ grayLetters: [], yellowLetters: [], greenLetters: [] });
+      },
     }),
     {
       name: "letters",
