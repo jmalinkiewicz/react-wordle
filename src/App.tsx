@@ -7,6 +7,8 @@ import Nav from "./components/nav/nav";
 import Stats from "./components/panels/stats";
 import Settings from "./components/panels/settings";
 import { useWordleStore } from "./state/wordle";
+import Keyboard from "./components/keyboard/keyboard";
+import { useLettersStore } from "./state/letters";
 
 function App() {
   const {
@@ -31,6 +33,7 @@ function App() {
     solution,
     guesses,
   } = useWordleStore();
+  const { resetLetters } = useLettersStore();
 
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -134,54 +137,58 @@ function App() {
         showSettings={showSettings}
         setShowSettings={setShowSettings}
       />
-      <main className="max-w-screen-xl m-auto mt-24">
-        <h1 className="font-serif text-center text-4xl font-bold text-lime-800">
-          Wordle
-        </h1>
-        {/* board */}
-        <div className="mt-16 flex flex-col gap-1 relative">
-          <Stats showStats={showStats} />
-          <Settings
-            showSettings={showSettings}
-            resetGameState={resetGameState}
-          />
-          {guesses.map((guess, index) => {
-            const isCurrentGuess =
-              index === guesses.findIndex((val) => val == null);
-            return (
-              <Line
-                key={index}
-                guess={isCurrentGuess ? currentGuess : guess ?? ""}
-                isFinal={!isCurrentGuess && guess != null}
-                solution={solution}
-              />
-            );
-          })}
-        </div>
-        {isGameOver && (
-          <motion.div
-            className="flex flex-col items-center gap-4 mt-12"
-            animate={{
-              scale: [0, 1],
-            }}
-          >
-            <h2 className="text-center text-2xl">
-              The word was{" "}
-              <span className="text-lime-800 font-bold">{solution}</span>
-            </h2>
-            <motion.button
-              whileHover={{
-                textDecoration: "underline",
+      <main className="max-w-screen-xl m-auto pt-24 flex flex-col justify-between items-center h-full">
+        <div>
+          <h1 className="font-serif text-center text-4xl font-bold text-lime-800">
+            Wordle
+          </h1>
+          {/* board */}
+          <div className="mt-16 flex flex-col gap-1 relative">
+            <Stats showStats={showStats} />
+            <Settings
+              showSettings={showSettings}
+              resetGameState={resetGameState}
+            />
+            {guesses.map((guess, index) => {
+              const isCurrentGuess =
+                index === guesses.findIndex((val) => val == null);
+              return (
+                <Line
+                  key={index}
+                  guess={isCurrentGuess ? currentGuess : guess ?? ""}
+                  isFinal={!isCurrentGuess && guess != null}
+                  solution={solution}
+                />
+              );
+            })}
+          </div>
+          {isGameOver && (
+            <motion.div
+              className="flex flex-col items-center gap-4 mt-12"
+              animate={{
+                scale: [0, 1],
               }}
-              onClick={() => {
-                resetGameState();
-              }}
-              className="font-bold text-lime-800"
             >
-              play again
-            </motion.button>
-          </motion.div>
-        )}
+              <h2 className="text-center text-2xl">
+                The word was{" "}
+                <span className="text-lime-800 font-bold">{solution}</span>
+              </h2>
+              <motion.button
+                whileHover={{
+                  textDecoration: "underline",
+                }}
+                onClick={() => {
+                  resetGameState();
+                  resetLetters();
+                }}
+                className="font-bold text-lime-800"
+              >
+                play again
+              </motion.button>
+            </motion.div>
+          )}
+        </div>
+        <Keyboard />
       </main>
     </>
   );
