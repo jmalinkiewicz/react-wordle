@@ -1,4 +1,3 @@
-import { color } from "framer-motion";
 import { useLettersStore } from "../../state/letters";
 import { useWordleStore } from "../../state/wordle";
 import Key from "./key";
