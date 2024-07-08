@@ -67,9 +67,6 @@ export const useWordleStore = create<WordleState & WordleActions>()(
           guesses: Array(6).fill(null),
           currentGuess: "",
           isGameOver: false,
-          guessesMade: 0,
-          uniqueGuesses: [],
-          firstGuessList: [],
         });
       },
     }),
